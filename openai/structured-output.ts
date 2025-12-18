@@ -1,6 +1,7 @@
 import 'dotenv/config'
-import z from 'zod'
 import { Agent, Command } from '@jigjoy-io/mosaic'
+
+import z from 'zod'
 
 const mealPlanSchema = z.object({
     calories: z.number(),
@@ -10,24 +11,20 @@ const mealPlanSchema = z.object({
             description: z.string(),
             ingredients: z.array(z.string()).min(3)
         })
-    ).length(3),
+    ).length(1),
     shoppingList: z.array(z.string())
 })
 
-async function structuredOutputExample() {
-    const request: Command = {
-        model: 'gpt-5-mini',
-        task: 'Create a 1-day vegetarian meal plan with breakfast, lunch, and dinner.',
-        structuredOutput: mealPlanSchema
-    }
-
-    const agent = new Agent(request)
-    const response = await agent.act()
-    const result = mealPlanSchema.parse(response)
-    console.log(result)
+const request: Command = {
+    model: 'gpt-5-mini',
+    task: 'Create a 1-day vegetarian meal plan with breakfast, lunch, and dinner.',
+    structuredOutput: mealPlanSchema
 }
 
-structuredOutputExample().catch((error) => {
-    console.error('OpenAI structured output example failed:', error)
-})
+const agent = new Agent(request)
+
+const response = await agent.act()
+const result = mealPlanSchema.parse(response)
+
+console.log(result)
 
