@@ -36,6 +36,8 @@ npx tsx anthropic/vision.ts
 npx tsx anthropic/multi-turn-conversation.ts
 npx tsx anthropic/complex-reasoning.ts
 npx tsx openai/simple-prompt.ts
+npx tsx structured-output/anthropic-example.ts
+npx tsx structured-output/openai-example.ts
 npx tsx tools/write-file.ts
 npx tsx parallel/parallel-agents.ts
 ```
