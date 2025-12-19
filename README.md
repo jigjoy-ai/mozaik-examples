@@ -46,4 +46,5 @@ npx tsx parallel/parallel-agents.ts
 - `anthropic/` — Anthropic-specific examples
 - `openai/` — OpenAI-specific examples
 - `parallel/` — Parallel execution examples using Promise.all()
+- `structured-output/` — Structured output examples
 - `tools/` — Tool-calling examples
