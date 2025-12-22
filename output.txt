@@ -1,0 +1,22 @@
+Tool calling: A short summary
+
+Tool calling refers to an AI system invoking external tools, APIs, or functions to perform tasks it cannot complete natively. Tools can include web search, calculators, databases, file operations, or specialized services. 
+
+Benefits:
+- Extends capabilities beyond the model's internal knowledge and computation.
+- Enables real-time access to up-to-date information and external resources.
+- Allows precise operations (e.g., file I/O, structured queries, code execution).
+
+Key considerations:
+- Security and privacy: validate inputs, limit data shared, and sandbox tool execution.
+- Reliability: handle errors, timeouts, and partial failures gracefully.
+- Transparency: inform users when tools are used and what data is sent.
+- Permissions and compliance: ensure user consent and follow legal/regulatory constraints.
+
+Best practices:
+- Use minimal necessary data when invoking tools.
+- Implement robust error handling and retries with backoff.
+- Log actions for auditing while protecting sensitive information.
+- Prefer well-documented, authenticated APIs and limit access tokens’ scope.
+
+In short, tool calling lets AI systems safely and effectively extend their capabilities by integrating external services while maintaining user trust and system reliability.
