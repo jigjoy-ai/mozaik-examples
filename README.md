@@ -40,6 +40,7 @@ npx tsx structured-output/anthropic-example.ts
 npx tsx structured-output/openai-example.ts
 npx tsx tools/write-file.ts
 npx tsx parallel/parallel-agents.ts
+npx tsx fallback/fallback-strategies.ts
 ```
 
 ### Project Structure
@@ -48,3 +49,4 @@ npx tsx parallel/parallel-agents.ts
 - `parallel/` — Parallel execution examples using Promise.all()
 - `structured-output/` — Structured output examples
 - `tools/` — Tool-calling examples
+- `fallback/` — Fallback strategy examples using multiple providers

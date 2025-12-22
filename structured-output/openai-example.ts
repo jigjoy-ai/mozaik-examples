@@ -27,4 +27,3 @@ const response = await agent.act()
 const result = mealPlanSchema.parse(response)
 
 console.log(result)
-
