@@ -1,4 +1,3 @@
-
 import 'dotenv/config'
 import { Agent, Command, Message } from '@jigjoy-io/mosaic'
 
@@ -9,7 +8,7 @@ const messages: Message[] = [{
 // Create OpenAI agent configuration
 const openaiRequest: Command = {
     messages: messages,
-    model: 'gpt-5'
+    model: 'gpt-5.1'
 }
 
 // Create Anthropic agent configuration
@@ -35,5 +34,5 @@ function wordCount(text: string): number {
     return text.trim().split(/\s+/).length
 }
 
-console.log('OpenAI words:', wordCount(openaiResponse))
-console.log('Anthropic words:', wordCount(anthropicResponse))
+console.log('GPT words:', wordCount(openaiResponse))
+console.log('Claude words:', wordCount(anthropicResponse))
