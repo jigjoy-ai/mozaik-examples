@@ -1,13 +1,15 @@
-import 'dotenv/config'
-import { Command, Agent } from '@jigjoy-io/mosaic'
+import "dotenv/config"
+import { Command, Agent } from "@jigjoy-io/mosaic"
 
 const command: Command = {
-    messages: [{
-        role: 'system', 
-        content: 'You are the weather assistent'
-    }],
-    task: 'What is the weather in Serbia',
-    model: 'gpt-5'
+	messages: [
+		{
+			role: "system",
+			content: "You are the weather assistent",
+		},
+	],
+	task: "What is the weather in Serbia",
+	model: "gpt-5",
 }
 
 const agent = new Agent(command)
