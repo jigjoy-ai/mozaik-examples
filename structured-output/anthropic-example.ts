@@ -24,5 +24,5 @@ const command: Command = {
 
 const agent = new Agent(command)
 const response = await agent.act()
-const result = bugReportSchema.parse(response)
+const result = bugReportSchema.parse(response.data)
 console.log(result)

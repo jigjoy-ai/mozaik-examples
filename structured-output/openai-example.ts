@@ -26,6 +26,6 @@ const request: Command = {
 const agent = new Agent(request)
 
 const response = await agent.act()
-const result = mealPlanSchema.parse(response)
+const result = mealPlanSchema.parse(response.data)
 
 console.log(result)
