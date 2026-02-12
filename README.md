@@ -1,6 +1,6 @@
 ## Mosaic Examples
 
-This example project showcases how to use @jigjoy-io/mosaic to send unified requests when interacting with both OpenAI and Anthropic models.
+This example project showcases how to use @mozaik-ai/core to send unified requests when interacting with both OpenAI and Anthropic models.
 
 ### Prerequisites
 - Node.js 18+
@@ -35,7 +35,7 @@ npx tsx anthropic/simple-prompt.ts
 npx tsx anthropic/vision.ts
 npx tsx anthropic/multi-turn-conversation.ts
 npx tsx anthropic/complex-reasoning.ts
-npx tsx openai/simple-prompt.ts
+npx tsx openai/simple-task.ts
 npx tsx structured-output/anthropic-example.ts
 npx tsx structured-output/openai-example.ts
 npx tsx tools/write-file.ts

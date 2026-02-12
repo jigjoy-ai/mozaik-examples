@@ -1,6 +1,6 @@
 import "dotenv/config"
 import { z } from "zod"
-import { Agent, Command } from "@jigjoy-io/mosaic"
+import { Agent, Command } from "@mozaik-ai/core"
 
 const bugReportSchema = z.object({
 	title: z.string(),

@@ -6,7 +6,7 @@
  */
 
 import "dotenv/config"
-import { Command, Agent } from "@jigjoy-io/mosaic"
+import { Command, Agent } from "@mozaik-ai/core"
 
 async function visionExample() {
 	console.log("\n=== Vision Example ===\n")

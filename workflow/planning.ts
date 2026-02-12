@@ -1,4 +1,4 @@
-import { Command, PlanningAgent, Workflow } from "@jigjoy-io/mosaic"
+import { Command, PlanningAgent, Workflow } from "@mozaik-ai/core"
 import "dotenv/config"
 
 const command: Command = {

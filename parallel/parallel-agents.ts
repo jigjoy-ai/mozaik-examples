@@ -1,5 +1,5 @@
 import "dotenv/config"
-import { Agent, Command, Message } from "@jigjoy-io/mosaic"
+import { Agent, Command, Message } from "@mozaik-ai/core"
 
 const messages: Message[] = [
 	{

@@ -6,7 +6,7 @@
  */
 
 import "dotenv/config"
-import { Agent, Command } from "@jigjoy-io/mosaic"
+import { Agent, Command } from "@mozaik-ai/core"
 
 const command: Command = {
 	messages: [

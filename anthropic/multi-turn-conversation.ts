@@ -6,7 +6,7 @@
  */
 
 import "dotenv/config"
-import { Agent, Command } from "@jigjoy-io/mosaic"
+import { Agent, Command } from "@mozaik-ai/core"
 
 // Multi-turn conversation with Claude Haiku 4.5
 async function conversationExample() {

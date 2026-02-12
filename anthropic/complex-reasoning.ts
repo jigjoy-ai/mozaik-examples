@@ -6,7 +6,7 @@
  */
 
 import "dotenv/config"
-import { Command, Agent } from "@jigjoy-io/mosaic"
+import { Command, Agent } from "@mozaik-ai/core"
 
 // Using Claude Opus 4.5 for complex reasoning
 async function complexReasoningExample() {

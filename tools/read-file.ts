@@ -1,6 +1,6 @@
 import "dotenv/config"
 import { promises as fs } from "fs"
-import { Agent, Command, Tool } from "@jigjoy-io/mosaic"
+import { Agent, Command, Tool } from "@mozaik-ai/core"
 
 const tools: Tool[] = [
 	{
