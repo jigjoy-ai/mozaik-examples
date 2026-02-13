@@ -11,7 +11,7 @@
 		"format": "prettier --write \"**/*.{ts,tsx}\""
 	},
 	"dependencies": {
-		"@mozaik-ai/core": "^0.7.2",
+		"@mozaik-ai/core": "^0.8.2",
 		"dotenv": "^17.2.3",
 		"zod": "^4.1.13"
 	},

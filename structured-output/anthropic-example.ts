@@ -1,6 +1,6 @@
 import "dotenv/config"
 import { z } from "zod"
-import { Agent, Command } from "@mozaik-ai/core"
+import { MozaikAgent, MozaikRequest } from "@mozaik-ai/core"
 
 const bugReportSchema = z.object({
 	title: z.string(),
@@ -10,7 +10,7 @@ const bugReportSchema = z.object({
 	suggestedFix: z.string(),
 })
 
-const command: Command = {
+const request: MozaikRequest = {
 	model: "claude-sonnet-4.5",
 	messages: [
 		{
@@ -22,7 +22,7 @@ const command: Command = {
 	structuredOutput: bugReportSchema,
 }
 
-const agent = new Agent(command)
+const agent = new MozaikAgent(request)
 const response = await agent.act()
 const result = bugReportSchema.parse(response.data)
 console.log(result)

@@ -1,5 +1,5 @@
 import "dotenv/config"
-import { Agent, Command, Message } from "@mozaik-ai/core"
+import { MozaikAgent, MozaikRequest, Message } from "@mozaik-ai/core"
 
 const messages: Message[] = [
 	{
@@ -8,25 +8,28 @@ const messages: Message[] = [
 	},
 ]
 // Create OpenAI agent configuration
-const openaiRequest: Command = {
+const openaiRequest: MozaikRequest = {
 	messages: messages,
 	model: "gpt-5.1",
 }
 
 // Create Anthropic agent configuration
-const anthropicRequest: Command = {
+const anthropicRequest: MozaikRequest = {
 	messages: messages,
 	model: "claude-sonnet-4.5",
 }
 
-const openaiAgent = new Agent(openaiRequest)
-const anthropicAgent = new Agent(anthropicRequest)
+const openaiMozaikAgent = new MozaikAgent(openaiRequest)
+const anthropicMozaikAgent = new MozaikAgent(anthropicRequest)
 
 const task = "What are the key differences between TypeScript and JavaScript? Provide a concise answer."
 
-console.log("Agents working in parallel...")
-const [openaiResponse, anthropicResponse] = await Promise.all([openaiAgent.act(task), anthropicAgent.act(task)])
-console.log("Agents finished with reasoning.")
+console.log("MozaikAgents working in parallel...")
+const [openaiResponse, anthropicResponse] = await Promise.all([
+	openaiMozaikAgent.act(task),
+	anthropicMozaikAgent.act(task),
+])
+console.log("MozaikAgents finished with reasoning.")
 
 function wordCount(text: string): number {
 	return text.trim().split(/\s+/).length

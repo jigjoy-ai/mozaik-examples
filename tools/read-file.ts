@@ -1,6 +1,6 @@
 import "dotenv/config"
 import { promises as fs } from "fs"
-import { Agent, Command, Tool } from "@mozaik-ai/core"
+import { MozaikAgent, MozaikRequest, Tool } from "@mozaik-ai/core"
 
 const tools: Tool[] = [
 	{
@@ -21,7 +21,7 @@ const tools: Tool[] = [
 ]
 
 async function runReadFileExample() {
-	const command: Command = {
+	const request: MozaikRequest = {
 		model: "gpt-5.1",
 		tools,
 		messages: [
@@ -33,7 +33,7 @@ async function runReadFileExample() {
 		task: "Read the file trip-checklist.txt and tell me what items are on the checklist.",
 	}
 
-	const agent = new Agent(command)
+	const agent = new MozaikAgent(request)
 	const response = await agent.act()
 	console.log(JSON.stringify(response, null, 2))
 }

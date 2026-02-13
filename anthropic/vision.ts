@@ -6,12 +6,12 @@
  */
 
 import "dotenv/config"
-import { Command, Agent } from "@mozaik-ai/core"
+import { MozaikRequest, MozaikAgent } from "@mozaik-ai/core"
 
 async function visionExample() {
 	console.log("\n=== Vision Example ===\n")
 
-	const request: Command = {
+	const request: MozaikRequest = {
 		messages: [
 			{
 				role: "user",
@@ -26,7 +26,7 @@ async function visionExample() {
 		model: "claude-opus-4.5",
 	}
 
-	const agent = new Agent(request)
+	const agent = new MozaikAgent(request)
 	const response = agent.act("What is in this image?")
 
 	console.log(response)

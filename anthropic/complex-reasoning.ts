@@ -4,15 +4,14 @@
  * Note: Requires ANTHROPIC_API_KEY in .env file
  * Get your API key from: https://console.anthropic.com/settings/keys
  */
-
 import "dotenv/config"
-import { Command, Agent } from "@mozaik-ai/core"
+import { MozaikRequest, MozaikAgent } from "@mozaik-ai/core"
 
 // Using Claude Opus 4.5 for complex reasoning
 async function complexReasoningExample() {
 	console.log("\n=== Complex Reasoning with Claude Opus 4.5 ===\n")
 
-	const command: Command = {
+	const request: MozaikRequest = {
 		messages: [
 			{
 				role: "system",
@@ -22,7 +21,7 @@ async function complexReasoningExample() {
 		model: "claude-opus-4.5",
 	}
 
-	const agent = new Agent(command)
+	const agent = new MozaikAgent(request)
 	const response = await agent.act(
 		"Compare and contrast the Strategy pattern vs the State pattern. When should I use each?",
 	)

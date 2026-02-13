@@ -1,7 +1,7 @@
 import "dotenv/config"
-import { Command, Agent } from "@mozaik-ai/core"
+import { MozaikRequest, MozaikAgent } from "@mozaik-ai/core"
 
-const command: Command = {
+const request: MozaikRequest = {
 	messages: [
 		{
 			role: "system",
@@ -12,6 +12,6 @@ const command: Command = {
 	model: "gpt-5",
 }
 
-const agent = new Agent(command)
+const agent = new MozaikAgent(request)
 const response = await agent.act()
 console.log(response)

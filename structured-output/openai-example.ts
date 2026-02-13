@@ -1,5 +1,5 @@
 import "dotenv/config"
-import { Agent, Command } from "@mozaik-ai/core"
+import { MozaikAgent, MozaikRequest } from "@mozaik-ai/core"
 
 import z from "zod"
 
@@ -17,13 +17,13 @@ const mealPlanSchema = z.object({
 	shoppingList: z.array(z.string()),
 })
 
-const request: Command = {
+const request: MozaikRequest = {
 	model: "gpt-5-mini",
 	task: "Create a 1-day vegetarian meal plan with breakfast, lunch, and dinner.",
 	structuredOutput: mealPlanSchema,
 }
 
-const agent = new Agent(request)
+const agent = new MozaikAgent(request)
 
 const response = await agent.act()
 const result = mealPlanSchema.parse(response.data)

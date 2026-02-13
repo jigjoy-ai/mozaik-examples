@@ -6,13 +6,13 @@
  */
 
 import "dotenv/config"
-import { Agent, Command } from "@mozaik-ai/core"
+import { MozaikAgent, MozaikRequest } from "@mozaik-ai/core"
 
 // Multi-turn conversation with Claude Haiku 4.5
 async function conversationExample() {
 	console.log("\n=== Multi-turn Conversation with Claude Haiku 4.5 ===\n")
 
-	const command: Command = {
+	const request: MozaikRequest = {
 		messages: [
 			{ role: "system", content: "You are an expert TypeScript developer" },
 			{ role: "user", content: "What are generics in TypeScript?" },
@@ -21,7 +21,7 @@ async function conversationExample() {
 		model: "claude-haiku-4.5",
 	}
 
-	const agent = new Agent(command)
+	const agent = new MozaikAgent(request)
 	const response = await agent.act("Can you show me a practical example?")
 	console.log(response)
 }

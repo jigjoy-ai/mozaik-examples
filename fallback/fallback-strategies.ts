@@ -6,9 +6,9 @@
  */
 
 import "dotenv/config"
-import { Agent, Command } from "@mozaik-ai/core"
+import { MozaikAgent, MozaikRequest } from "@mozaik-ai/core"
 
-const command: Command = {
+const request: MozaikRequest = {
 	messages: [
 		{
 			role: "user",
@@ -18,7 +18,7 @@ const command: Command = {
 	model: "claude-sonnet-4.5",
 }
 
-const agent = new Agent(command)
+const agent = new MozaikAgent(request)
 
 try {
 	console.log("Calling Anthropic (primary)...")

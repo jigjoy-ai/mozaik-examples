@@ -6,13 +6,13 @@
  */
 
 import "dotenv/config"
-import { Agent, Command } from "@mozaik-ai/core"
+import { MozaikAgent, MozaikRequest } from "@mozaik-ai/core"
 
 // Simple prompt with Claude Sonnet 4.5
 async function simpleExample() {
 	console.log("\n=== Simple Claude Sonnet 4.5 Example ===\n")
 
-	const command: Command = {
+	const request: MozaikRequest = {
 		messages: [
 			{
 				role: "system",
@@ -22,7 +22,7 @@ async function simpleExample() {
 		model: "claude-sonnet-4.5",
 	}
 
-	const agent = new Agent(command)
+	const agent = new MozaikAgent(request)
 	const prompt = "Explain quantum entanglement in 2-3 sentences for a beginner"
 
 	let response = await agent.act(prompt)

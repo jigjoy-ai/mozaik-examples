@@ -1,10 +1,10 @@
-import { Command, PlanningAgent, Workflow } from "@mozaik-ai/core"
+import { MozaikRequest, PlanningMozaikAgent, Workflow } from "@mozaik-ai/core"
 import "dotenv/config"
 
-const command: Command = {
+const request: MozaikRequest = {
 	model: "gpt-5",
 }
-const planner = new PlanningAgent(command)
+const planner = new PlanningMozaikAgent(request)
 const workflow: Workflow = await planner.planFromGoal("Implement login functionality ")
 console.log(workflow)
 // await workflow.execute()
