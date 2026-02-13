@@ -26,10 +26,10 @@
     wrap-ansi "^8.1.0"
     wrap-ansi-cjs "npm:wrap-ansi@^7.0.0"
 
-"@mozaik-ai/core@^0.8.2":
-  version "0.8.2"
-  resolved "https://registry.npmjs.org/@mozaik-ai/core/-/core-0.8.2.tgz"
-  integrity sha512-58ifG/SxQj5w7f5aW6L26DYwykO/cXUiA5KLkAO02A+7kY8L3TlpViqNbYaVp1CQF2ilzwwc1xdDiMciqH+1fw==
+"@mozaik-ai/core@^0.8.4":
+  version "0.8.4"
+  resolved "https://registry.npmjs.org/@mozaik-ai/core/-/core-0.8.4.tgz"
+  integrity sha512-/beLKPH78MjGYpEd9uc3glJgQXLjSZJ/7gtLWPAQPr4WVvSbMeENM9pWrWZ5YUXu+NjTaaXHBGtYU23xXjqnCQ==
   dependencies:
     "@anthropic-ai/sdk" "^0.74.0"
     openai "^6.21.0"
