@@ -1,6 +1,5 @@
 import "dotenv/config"
 import { MozaikAgent, MozaikRequest } from "@mozaik-ai/core"
-
 import z from "zod"
 
 const mealPlanSchema = z.object({
