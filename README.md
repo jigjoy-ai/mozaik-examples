@@ -1,8 +1,15 @@
-## Mosaic Examples
+## Mozaik Examples
 
-This example project showcases how to use @mozaik-ai/core to send unified requests when interacting with both OpenAI and Anthropic models.
+This repository contains **a single, up-to-date example** for the latest major version of `@mozaik-ai/core` (v2+), reflecting the library’s new architecture.
+
+The example demonstrates how to:
+
+- define a custom `GenerativeModel` adapter (OpenAI `responses` API in this repo)
+- build a `Context` (developer + user messages)
+- persist/restore context via a `ContextRepository` (in-memory in this repo)
 
 ### Prerequisites
+
 - Node.js 18+
 
 ### Install
@@ -12,41 +19,22 @@ npm install
 ```
 
 ### Environment
-Create a `.env` in the project root and add any provider API keys you plan to use (e.g., `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`). The examples load env vars via `dotenv`.
+
+Create a `.env` file in the project root and add your provider credentials as needed. This example uses OpenAI:
+
+```bash
+OPENAI_API_KEY=...
+```
 
 ### Run
-- Quick start (runs the Anthropic simple prompt example):
+
+Run the example directly with `tsx`:
 
 ```bash
-npm run dev
+npx tsx example.ts
 ```
 
-- Build and run the compiled `index.ts`:
+### Files
 
-```bash
-npm run build
-node dist/index.js
-```
-
-- Run any example directly (without building) using `tsx`:
-
-```bash
-npx tsx anthropic/simple-prompt.ts
-npx tsx anthropic/vision.ts
-npx tsx anthropic/multi-turn-conversation.ts
-npx tsx anthropic/complex-reasoning.ts
-npx tsx openai/simple-task.ts
-npx tsx structured-output/anthropic-example.ts
-npx tsx structured-output/openai-example.ts
-npx tsx tools/write-file.ts
-npx tsx parallel/parallel-agents.ts
-npx tsx fallback/fallback-strategies.ts
-```
-
-### Project Structure
-- `anthropic/` — Anthropic-specific examples
-- `openai/` — OpenAI-specific examples
-- `parallel/` — Parallel execution examples using Promise.all()
-- `structured-output/` — Structured output examples
-- `tools/` — Tool-calling examples
-- `fallback/` — Fallback strategy examples using multiple providers
+- `example.ts` — runnable example
+- `in-memory-context-repository.ts` — minimal `ContextRepository` implementation used by the example

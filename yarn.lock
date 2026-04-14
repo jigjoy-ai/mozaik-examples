@@ -26,13 +26,14 @@
     wrap-ansi "^8.1.0"
     wrap-ansi-cjs "npm:wrap-ansi@^7.0.0"
 
-"@mozaik-ai/core@^0.9.4":
-  version "0.9.4"
-  resolved "https://registry.npmjs.org/@mozaik-ai/core/-/core-0.9.4.tgz"
-  integrity sha512-rxDlr04fczx4Mu4r26eoCs1ORaZKZWqETQqLEAFN5jTXwL1BhoBOqMWphShw0xlcIkiS+uMFqoYdxfBWdVSOIg==
+"@mozaik-ai/core@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.npmjs.org/@mozaik-ai/core/-/core-2.0.0.tgz"
+  integrity sha512-vzlCKpPpE/hrYzwbiWXtDKgp/X/9EKAnLz+MKki8Xh/ovLzlyMyTz1Y5yxpkKQnL3yi1RSaXI21hj66d73UgzA==
   dependencies:
     "@anthropic-ai/sdk" "^0.74.0"
-    openai "^6.21.0"
+    dotenv "^17.4.1"
+    openai "^6.33.0"
     zod "^4.3.6"
 
 "@pkgjs/parseargs@^0.11.0":
@@ -102,10 +103,10 @@ cross-spawn@^7.0.6:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
-dotenv@^17.2.3:
-  version "17.2.3"
-  resolved "https://registry.npmjs.org/dotenv/-/dotenv-17.2.3.tgz"
-  integrity sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==
+dotenv@^17.2.3, dotenv@^17.4.1:
+  version "17.4.2"
+  resolved "https://registry.npmjs.org/dotenv/-/dotenv-17.4.2.tgz"
+  integrity sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==
 
 eastasianwidth@^0.2.0:
   version "0.2.0"
@@ -186,10 +187,10 @@ minimatch@^9.0.4:
   resolved "https://registry.npmjs.org/minipass/-/minipass-7.1.2.tgz"
   integrity sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==
 
-openai@^6.21.0:
-  version "6.31.0"
-  resolved "https://registry.npmjs.org/openai/-/openai-6.31.0.tgz"
-  integrity sha512-iqEn3QY1NnVrDOynUWA2Fjs04gzZ0m7fbwR9xZVFmcN1cqQwslMQM2sjQBNkTVFK/rrSvV78SXiBgU+Pyqz1Aw==
+openai@^6.33.0:
+  version "6.34.0"
+  resolved "https://registry.npmjs.org/openai/-/openai-6.34.0.tgz"
+  integrity sha512-yEr2jdGf4tVFYG6ohmr3pF6VJuveP0EA/sS8TBx+4Eq5NT10alu5zg2dmxMXMgqpihRDQlFGpRt2XwsGj+Fyxw==
 
 package-json-from-dist@^1.0.0:
   version "1.0.1"
