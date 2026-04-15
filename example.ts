@@ -1,4 +1,4 @@
-import { Context, gpt54, OpenAIResponses } from "@mozaik-ai/core"
+import { Context, GPT54, OpenAIResponses } from "@mozaik-ai/core"
 import { UserMessage, DeveloperMessage } from "@mozaik-ai/core"
 import { InMemoryContextRepository } from "./in-memory-context-repository"
 import "dotenv/config"
@@ -18,8 +18,9 @@ async function main() {
 
 	const openAiResponses = new OpenAIResponses()
 
-	const request = new InferenceRequest(gpt54, context)
-	gpt54.setReasoningEffort("medium")
+	const model = new GPT54()
+	model.setReasoningEffort("medium")
+	const request = new InferenceRequest(model, context)
 	const newContextItems = await openAiResponses.infer(request)
 	context.applyModelOutput(newContextItems)
 
