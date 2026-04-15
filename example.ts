@@ -20,11 +20,13 @@ export class GPT54Model extends GenerativeModel {
 		this.client = new OpenAI()
 	}
 
-	infer(request: any): Promise<any> {
-		return this.client.responses.create({
+	async infer(context: Context): Promise<ContextItem[]> {
+		const request = this.mapContextToRequest(context)
+		const response = await this.client.responses.create({
 			model: "gpt-5.4",
 			input: request,
 		})
+		return this.extractContextItems(response)
 	}
 
 	mapContextToRequest(context: Context): any[] {
@@ -59,8 +61,8 @@ async function main() {
 	await contextRepository.save(context)
 
 	const model = new GPT54Model()
-	const newContextItems = await model.call(context)
-	context.addItems(newContextItems)
+	const newContextItems = await model.infer(context)
+	context.applyModelOutput(newContextItems)
 
 	await contextRepository.save(context)
 	const restoredContexts = await contextRepository.getByProjectId(projectId)
