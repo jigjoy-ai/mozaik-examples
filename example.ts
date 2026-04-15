@@ -1,52 +1,7 @@
-import { Context } from "@mozaik-ai/core"
-import {
-	ContextItem,
-	UserMessage,
-	DeveloperMessage,
-	ModelMessage,
-	FunctionCall,
-	Reasoning,
-	GenerativeModel,
-} from "@mozaik-ai/core"
-import OpenAI from "openai"
-import "dotenv/config"
+import { Context, gpt54, OpenAIResponses } from "@mozaik-ai/core"
+import { UserMessage, DeveloperMessage } from "@mozaik-ai/core"
 import { InMemoryContextRepository } from "./in-memory-context-repository"
-
-export class GPT54Model extends GenerativeModel {
-	private readonly client: OpenAI
-
-	constructor() {
-		super()
-		this.client = new OpenAI()
-	}
-
-	async infer(context: Context): Promise<ContextItem[]> {
-		const request = this.mapContextToRequest(context)
-		const response = await this.client.responses.create({
-			model: "gpt-5.4",
-			input: request,
-		})
-		return this.extractContextItems(response)
-	}
-
-	mapContextToRequest(context: Context): any[] {
-		return context.getItems().map((item) => item.toJSON())
-	}
-
-	extractContextItems(response: any): ContextItem[] {
-		return response.output.map((item: any) => {
-			if (item.type === "message" && item.status === "completed") {
-				return ModelMessage.rehydrate(item.content[0] as { text: string })
-			}
-			if (item.type === "function_call" && item.status === "completed") {
-				return FunctionCall.rehydrate(item)
-			}
-			if (item.type === "reasoning" && item.status === "completed") {
-				return Reasoning.rehydrate(item)
-			}
-		})
-	}
-}
+import "dotenv/config"
 
 async function main() {
 	const message = UserMessage.create("Tell me a joke about birds")
@@ -60,8 +15,8 @@ async function main() {
 
 	await contextRepository.save(context)
 
-	const model = new GPT54Model()
-	const newContextItems = await model.infer(context)
+	const openresponses = new OpenAIResponses()
+	const newContextItems = await openresponses.infer(gpt54, context)
 	context.applyModelOutput(newContextItems)
 
 	await contextRepository.save(context)
