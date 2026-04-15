@@ -16,10 +16,10 @@ async function main() {
 
 	await contextRepository.save(context)
 
-	const openresponses = new OpenAIResponses()
+	const openAiResponses = new OpenAIResponses()
 
 	const request = new InferenceRequest(gpt54, context)
-	const newContextItems = await openresponses.infer(request)
+	const newContextItems = await openAiResponses.infer(request)
 	context.applyModelOutput(newContextItems)
 
 	await contextRepository.save(context)
