@@ -2,6 +2,7 @@ import { Context, gpt54, OpenAIResponses } from "@mozaik-ai/core"
 import { UserMessage, DeveloperMessage } from "@mozaik-ai/core"
 import { InMemoryContextRepository } from "./in-memory-context-repository"
 import "dotenv/config"
+import { InferenceRequest } from "@mozaik-ai/core"
 
 async function main() {
 	const message = UserMessage.create("Tell me a joke about birds")
@@ -16,7 +17,9 @@ async function main() {
 	await contextRepository.save(context)
 
 	const openresponses = new OpenAIResponses()
-	const newContextItems = await openresponses.infer(gpt54, context)
+
+	const request = new InferenceRequest(gpt54, context)
+	const newContextItems = await openresponses.infer(request)
 	context.applyModelOutput(newContextItems)
 
 	await contextRepository.save(context)
