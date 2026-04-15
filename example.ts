@@ -19,6 +19,7 @@ async function main() {
 	const openAiResponses = new OpenAIResponses()
 
 	const request = new InferenceRequest(gpt54, context)
+	gpt54.setReasoningEffort("medium")
 	const newContextItems = await openAiResponses.infer(request)
 	context.applyModelOutput(newContextItems)
 
