@@ -47,9 +47,6 @@ async function main() {
 	context.applyModelOutput(newContextItems)
 
 	await contextRepository.save(context)
-	const restoredContexts = await contextRepository.getByProjectId(projectId)
-	console.log(JSON.stringify(restoredContexts, null, 2))
-	console.log(response.tokenUsage)
 }
 
 main().catch((error) => {
