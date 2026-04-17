@@ -1,9 +1,8 @@
-import { Context, Gpt54, OpenAIResponses } from "@mozaik-ai/core"
+import { Context, Gpt54, InMemoryContextRepository, OpenAIResponses } from "@mozaik-ai/core"
 import { UserMessage, DeveloperMessage } from "@mozaik-ai/core"
-import { InMemoryContextRepository } from "./in-memory-context-repository"
-import "dotenv/config"
 import { InferenceRequest } from "@mozaik-ai/core"
 import { Tool } from "@mozaik-ai/core"
+import "dotenv/config"
 
 async function main() {
 	const message = UserMessage.create("Tell me a joke about birds")
