@@ -1,6 +1,6 @@
-import { Context, DeveloperMessage, Gpt54, UserMessage } from "@mozaik-ai/core"
-import agentLoop from "./agent-loop"
+import { Context, DeveloperMessage, Gpt54, Loop, UserMessage } from "@mozaik-ai/core"
 import { getBirdTypeTool } from "../utils/tools/get-bird-type"
+import { inferenceAction, loopCondition } from "./agent-loop"
 
 const message = UserMessage.create("Tell me a joke about birds")
 const developerMessage = DeveloperMessage.create(
@@ -14,6 +14,7 @@ async function main() {
 	const model = new Gpt54()
 	model.setReasoningEffort("medium")
 	model.setTools([getBirdTypeTool])
+	const agentLoop = new Loop({ condition: loopCondition, action: inferenceAction })
 	await agentLoop.apply({ context, model })
 	console.log(JSON.stringify(context.getItems(), null, 2))
 }

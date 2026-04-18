@@ -5,12 +5,10 @@ import {
 	FunctionCall,
 	FunctionCallOutput,
 	GenerativeModel,
-	Gpt54,
 	InferenceRequest,
 	ModelMessage,
 	OpenAIResponses,
 } from "@mozaik-ai/core"
-import { Loop } from "@mozaik-ai/core"
 import { getBirdTypeTool } from "../utils/tools/get-bird-type"
 
 import "dotenv/config"
@@ -27,7 +25,7 @@ export class LoopCondition extends BaseCondition<{ context: Context; model: any 
 	}
 }
 
-const condition = new LoopCondition()
+const loopCondition = new LoopCondition()
 
 export class InferenceAction implements AsyncAction<{ context: Context; model: any }> {
 	async apply({
@@ -53,7 +51,6 @@ export class InferenceAction implements AsyncAction<{ context: Context; model: a
 		return { context, model }
 	}
 }
-const action: AsyncAction<{ context: Context; model: any }> = new InferenceAction()
+const inferenceAction: AsyncAction<{ context: Context; model: any }> = new InferenceAction()
 
-const agentLoop = new Loop({ condition, action })
-export default agentLoop
+export { loopCondition, inferenceAction }
