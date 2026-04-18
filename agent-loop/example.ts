@@ -1,5 +1,6 @@
-import { Context, DeveloperMessage, UserMessage } from "@mozaik-ai/core"
+import { Context, DeveloperMessage, Gpt54, UserMessage } from "@mozaik-ai/core"
 import agentLoop from "./agent-loop"
+import { getBirdTypeTool } from "../utils/tools/get-bird-type"
 
 const message = UserMessage.create("Tell me a joke about birds")
 const developerMessage = DeveloperMessage.create(
@@ -10,7 +11,10 @@ const projectId = `pr-${crypto.randomUUID()}`
 const context = Context.create(projectId).addItem(developerMessage).addItem(message)
 
 async function main() {
-	await agentLoop.apply(context)
+	const model = new Gpt54()
+	model.setReasoningEffort("medium")
+	model.setTools([getBirdTypeTool])
+	await agentLoop.apply({ context, model })
 	console.log(JSON.stringify(context.getItems(), null, 2))
 }
 

@@ -4,6 +4,7 @@ import {
 	Context,
 	FunctionCall,
 	FunctionCallOutput,
+	GenerativeModel,
 	Gpt54,
 	InferenceRequest,
 	ModelMessage,
@@ -14,8 +15,8 @@ import { getBirdTypeTool } from "../utils/tools/get-bird-type"
 
 import "dotenv/config"
 
-export class LoopCondition extends BaseCondition<Context> {
-	isSatisfiedBy(context: Context): boolean {
+export class LoopCondition extends BaseCondition<{ context: Context; model: any }> {
+	isSatisfiedBy({ context, model }: { context: Context; model: any }): boolean {
 		console.log(context)
 		const items = context.getItems()
 		const lastItem = items[items.length - 1]
@@ -27,12 +28,15 @@ export class LoopCondition extends BaseCondition<Context> {
 }
 
 const condition = new LoopCondition()
-const model = new Gpt54()
-model.setReasoningEffort("medium")
-model.setTools([getBirdTypeTool])
 
-export class InferenceAction implements AsyncAction<Context> {
-	async apply(context: Context): Promise<Context> {
+export class InferenceAction implements AsyncAction<{ context: Context; model: any }> {
+	async apply({
+		context,
+		model,
+	}: {
+		context: Context
+		model: any
+	}): Promise<{ context: Context; model: GenerativeModel }> {
 		const request = new InferenceRequest(model, context)
 		const openAiResponses = new OpenAIResponses()
 		const response = await openAiResponses.infer(request)
@@ -46,10 +50,10 @@ export class InferenceAction implements AsyncAction<Context> {
 			const result = await getBirdTypeTool.invoke({})
 			context.addItem(FunctionCallOutput.create(callId, result.bird_type))
 		}
-		return context
+		return { context, model }
 	}
 }
-const action: AsyncAction<Context> = new InferenceAction()
+const action: AsyncAction<{ context: Context; model: any }> = new InferenceAction()
 
 const agentLoop = new Loop({ condition, action })
 export default agentLoop
