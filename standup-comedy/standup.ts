@@ -1,6 +1,5 @@
-import { AgentRuntime, Context, DeveloperMessage, Gpt54, UserMessage } from "@mozaik-ai/core"
+import { AgentRuntime, Context, DeveloperMessage, Gpt54, UserMessage, AgentSociety } from "@mozaik-ai/core"
 import { getBirdTypeTool } from "../utils/tools/get-bird-type"
-import { AgentSociety } from "./agent-society"
 import { JokeTellerAgent } from "./joke-teller"
 import { TimeCounter } from "./time-counter"
 import "dotenv/config"
