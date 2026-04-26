@@ -15,7 +15,7 @@ const developerMessage = DeveloperMessage.create(
 )
 
 const projectId = `pr-${crypto.randomUUID()}`
-const context = ModelContext.create(projectId).addItem(developerMessage).addItem(message)
+const context = ModelContext.create(projectId).addContextItem(developerMessage).addContextItem(message)
 
 const model = new Gpt54()
 model.setReasoningEffort("high")
