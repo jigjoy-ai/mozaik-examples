@@ -1,4 +1,4 @@
-import { AgentRuntime, Context, DeveloperMessage, Gpt54, UserMessage, AgentSociety } from "@mozaik-ai/core"
+import { AgentRuntime, ModelContext, DeveloperMessage, Gpt54, UserMessage, AgentSociety } from "@mozaik-ai/core"
 import { getBirdTypeTool } from "../utils/tools/get-bird-type"
 import { JokeTellerAgent } from "./joke-teller"
 import { TimeCounter } from "./time-counter"
@@ -15,7 +15,7 @@ const developerMessage = DeveloperMessage.create(
 )
 
 const projectId = `pr-${crypto.randomUUID()}`
-const context = Context.create(projectId).addItem(developerMessage).addItem(message)
+const context = ModelContext.create(projectId).addItem(developerMessage).addItem(message)
 
 const model = new Gpt54()
 model.setReasoningEffort("high")

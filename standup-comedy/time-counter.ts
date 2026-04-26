@@ -1,5 +1,4 @@
-import { RuntimeContext } from "@/mozaik/src/domain/agent-loop/loop"
-import { InferenceResponse, InferenceVisitor } from "@mozaik-ai/core"
+import { InferenceResponse, InferenceVisitor, RuntimeContext } from "@mozaik-ai/core"
 
 export class TimeCounter implements InferenceVisitor {
 	startTime: number = 0
