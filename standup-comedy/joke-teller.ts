@@ -1,18 +1,17 @@
-import { RuntimeContext } from "@/mozaik/src/domain/agent-loop/loop"
-import { Agent, AgentRuntime } from "@mozaik-ai/core"
+import { Agent, RuntimeContext } from "@mozaik-ai/core"
 
 export class JokeTellerAgent extends Agent {
-	constructor(agentRuntime: AgentRuntime) {
-		super(agentRuntime)
+	constructor() {
+		super()
 		// Workaround for unbound callbacks in @mozaik-ai/core Agent constructor.
 		// AgentRuntime keeps only one handler per hook id, so re-registering overwrites the buggy one.
-		agentRuntime.on("BEFORE_INFERENCE" as any, this.onStart.bind(this))
-		agentRuntime.on("AFTER_INFERENCE" as any, this.afterInference.bind(this))
-		agentRuntime.on("BEFORE_FUNCTION_CALL" as any, this.beforeFunctionCall.bind(this))
-		agentRuntime.on("AFTER_FUNCTION_CALL" as any, this.afterFunctionCall.bind(this))
-		agentRuntime.on("BEFORE_MODEL_MESSAGE" as any, this.beforeModelMessage.bind(this))
-		agentRuntime.on("AFTER_MODEL_MESSAGE" as any, this.afterModelMessage.bind(this))
-		agentRuntime.on("ON_ERROR" as any, this.onError.bind(this))
+		this.runtime.on("BEFORE_INFERENCE" as any, this.onStart.bind(this))
+		this.runtime.on("AFTER_INFERENCE" as any, this.afterInference.bind(this))
+		this.runtime.on("BEFORE_FUNCTION_CALL" as any, this.beforeFunctionCall.bind(this))
+		this.runtime.on("AFTER_FUNCTION_CALL" as any, this.afterFunctionCall.bind(this))
+		this.runtime.on("BEFORE_MODEL_MESSAGE" as any, this.beforeModelMessage.bind(this))
+		this.runtime.on("AFTER_MODEL_MESSAGE" as any, this.afterModelMessage.bind(this))
+		this.runtime.on("ON_ERROR" as any, this.onError.bind(this))
 	}
 
 	async afterModelMessage(context: RuntimeContext): Promise<void> {
