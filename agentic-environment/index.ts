@@ -1,6 +1,4 @@
-import {
-	AgenticEnvironment,
-} from "@mozaik-ai/core"
+import { AgenticEnvironment } from "@mozaik-ai/core"
 import { MyParticipant } from "./participant"
 import { DefaultFunctionCallRunner } from "./function-call-runner"
 import { DefaultInferenceRunner } from "./inference-runner"
@@ -18,5 +16,3 @@ environment.start()
 mijura.join(environment)
 lotus.join(environment)
 mijura.streamInput(environment)
-
-environment.stop()
