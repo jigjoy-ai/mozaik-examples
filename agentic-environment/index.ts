@@ -2,22 +2,21 @@ import {
 	AgenticEnvironment,
 } from "@mozaik-ai/core"
 import { MyParticipant } from "./participant"
-import { MyInferenceHandler } from "./inference-handler"
-import { MyMessageGenerator } from "./message-generator"
-import { MyToolExecutor } from "./tool-executor"
+import { DefaultFunctionCallRunner } from "./function-call-runner"
+import { DefaultInferenceRunner } from "./inference-runner"
+import { InputSource } from "./input-item-source"
 
-const toolExecutor = new MyToolExecutor()
-const messageGenerator = new MyMessageGenerator()
-const inferenceHandler = new MyInferenceHandler()
+const functionCallRunner = new DefaultFunctionCallRunner()
+const inputSource = new InputSource()
+const inferenceRunner = new DefaultInferenceRunner()
 
-const mijura = new MyParticipant("mijura", toolExecutor, messageGenerator, inferenceHandler)
-const lotus = new MyParticipant("lotus", toolExecutor, messageGenerator, inferenceHandler)
+const mijura = new MyParticipant("mijura", inputSource, inferenceRunner, functionCallRunner)
+const lotus = new MyParticipant("lotus", inputSource, inferenceRunner, functionCallRunner)
 
 const environment = new AgenticEnvironment()
 environment.start()
 mijura.join(environment)
 lotus.join(environment)
-mijura.sendMessage("Hello, how are you?", environment)
-lotus.sendMessage("I'm fine, thank you!", environment)
+mijura.streamInput(environment)
 
 environment.stop()

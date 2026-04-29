@@ -1,35 +1,19 @@
-import { FunctionCallItem, FunctionCallOutputItem, InferenceHandler, MessageSender, ModelMessageItem, Participant, ReasoningItem, ToolExecutor } from "@mozaik-ai/core"
+import { BaseAgentParticipant, ContextItem, FunctionCallRunner, InferenceRunner, InputItemSource, Participant } from "@mozaik-ai/core"
 
-export class MyParticipant extends Participant {
+export class MyParticipant extends BaseAgentParticipant {
 	private readonly name: string
 	constructor(
 		name: string,
-		toolExecutor: ToolExecutor,
-		messageGenerator: MessageSender,
-		inferenceHandler: InferenceHandler,
+		inputSource: InputItemSource,
+		inferenceRunner: InferenceRunner,
+		functionCallRunner: FunctionCallRunner,
 	) {
-		super(toolExecutor, messageGenerator, inferenceHandler)
+		super(inputSource, inferenceRunner, functionCallRunner)
 		this.name = name
 	}
 
-	onFunctionCallOutput(participant: Participant, item: FunctionCallOutputItem): Promise<void> {
-		console.log(`${this.name} received FunctionCallOutput`, item)
-		return Promise.resolve()
-	}
-	onMessage(participant: Participant, message: string): Promise<void> {
-		console.log(`${this.name} received Message`, message)
-		return Promise.resolve()
-	}
-	onFunctionCall(participant: Participant, item: FunctionCallItem): Promise<void> {
-		console.log(`${this.name} received FunctionCall`, item)
-		return Promise.resolve()
-	}
-	onReasoning(participant: Participant, item: ReasoningItem): Promise<void> {
-		console.log(`${this.name} received Reasoning`, item)
-		return Promise.resolve()
-	}
-	onOutputMessage(participant: Participant, item: ModelMessageItem): Promise<void> {
-		console.log(`${this.name} received OutputMessage`, item)
-		return Promise.resolve()
-	}
+    async onContextItem(source: Participant, item: ContextItem): Promise<void> {
+        console.log(`${this.name} received ContextItem`, item)
+        return Promise.resolve()
+    }
 }
