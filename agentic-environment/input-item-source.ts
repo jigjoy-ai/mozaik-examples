@@ -3,6 +3,6 @@ import { DeveloperMessageItem, SystemMessageItem, InputItemSource, UserMessageIt
 export class InputSource implements InputItemSource {
 	async *stream(signal?: AbortSignal): AsyncIterable<UserMessageItem | DeveloperMessageItem | SystemMessageItem> {
 		yield DeveloperMessageItem.create("You are a helpful assistant.")
-        yield UserMessageItem.create("Hello, how are you?")
+		yield UserMessageItem.create("What is the capital of France?")
 	}
 }
