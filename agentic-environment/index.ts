@@ -1,7 +1,6 @@
-import { AgenticEnvironment, Gpt54, ModelContext } from "@mozaik-ai/core"
+import { AgenticEnvironment, Gpt54, ModelContext, OpenAIInferenceRunner } from "@mozaik-ai/core"
 import { MyParticipant } from "./participant"
 import { DefaultFunctionCallRunner } from "./function-call-runner"
-import { OpenAIInferenceRunner } from "./inference-runner"
 import { InputSource } from "./input-item-source"
 import { capitalOfFranceTool } from "./capital-of-france-tool"
 import { ReactiveAgent } from "./reactive-agent"
