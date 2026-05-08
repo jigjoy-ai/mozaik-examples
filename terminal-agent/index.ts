@@ -3,7 +3,7 @@ import { HumanInputSource } from "./human"
 import { TerminalAgent, TerminalAgentInputSource, terminalTools } from "./agent"
 
 const environment = new AgenticEnvironment()
-const inputSource = new TerminalAgentInputSource()
+const inputSource = new TerminalAgentInputSource('')
 const inferenceRunner = new OpenAIInferenceRunner()
 const functionCallRunner = new DefaultFunctionCallRunner(terminalTools)
 const context = ModelContext.create("terminal-agent")

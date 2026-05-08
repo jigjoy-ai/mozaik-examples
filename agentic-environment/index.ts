@@ -3,7 +3,7 @@ import { MyParticipant } from "./participant"
 import { InputSource } from "./input-item-source"
 import { capitalOfFranceTool } from "./capital-of-france-tool"
 import { ReactiveAgent } from "./reactive-agent"
-import { TranscriptLogger } from "./tanscript-logger"
+import { TranscriptLogger } from "./transcript-logger"
 import "dotenv/config"
 
 const functionCallRunner = new DefaultFunctionCallRunner([capitalOfFranceTool])

@@ -73,7 +73,11 @@ export class TerminalAgent extends BaseAgentParticipant {
 }
 
 export class TerminalAgentInputSource implements InputItemSource {
+
+	constructor(private readonly message: string) {
+	}
+
 	async *stream(signal?: AbortSignal): AsyncIterable<UserMessageItem | DeveloperMessageItem | SystemMessageItem> {
-		yield UserMessageItem.create(`Analyze this directory and write a detailed description of the project in a file called purpose.md.`)
+		yield UserMessageItem.create(this.message)
 	}
 }
