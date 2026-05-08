@@ -1,45 +1,121 @@
-## Mozaik Examples
+# Mozaik Examples
 
-This repository contains runnable examples for `@mozaik-ai/core`.
+This repository contains small, runnable TypeScript examples built with [`@mozaik-ai/core`](https://www.npmjs.com/package/@mozaik-ai/core).
 
-## Standup Comedy (`standup-comedy/`)
+The code currently focuses on two example projects:
 
-This example focuses on **core framework concepts**:
+- `agentic-environment/` — a minimal reactive environment with participants, shared context, inference, and a simple tool call
+- `terminal-agent/` — a terminal-capable agent that can run shell commands and use the results to complete tasks
 
-- **Non-blocking agent execution**: an `AgentSociety` starts a lightweight loop and agents are triggered without blocking your process on a single synchronous call.
-- **Visiting the agent loop**: it shows an easy way to “visit” inference by attaching an `InferenceVisitor`.
-  - The included `TimeCounter` visitor measures and prints inference duration, and keeps a running total.
-- **Hooking into lifecycle**: `JokeTellerAgent` registers runtime hook handlers so you can observe/extend the agent loop at key points.
-
-### Prerequisites
+## Prerequisites
 
 - Node.js 18+
+- An OpenAI API key for examples that use `OpenAIInferenceRunner`
 
-### Install
+## Install
 
 ```bash
 npm install
 ```
 
-### Environment
+## Environment
 
-Create a `.env` file in the project root and add your provider credentials as needed. The standup example uses OpenAI:
-
-```bash
-OPENAI_API_KEY=...
-```
-
-### Run
-
-Run the standup example directly with `tsx`:
+Create a `.env` file in the project root:
 
 ```bash
-npx tsx standup-comedy/standup.ts
+OPENAI_API_KEY=your_api_key_here
 ```
 
-### Files
+## Examples
 
-- `standup-comedy/standup.ts` — entrypoint wiring runtime, agent, visitor, model, and context
-- `standup-comedy/joke-teller.ts` — agent implementation + runtime hook handlers
-- `standup-comedy/time-counter.ts` — `InferenceVisitor` timer example
-- `standup-comedy/agent-society.ts` — minimal non-blocking “society” loop/orchestration
+### 1. Agentic Environment (`agentic-environment/`)
+
+A small example that demonstrates the core Mozaik runtime pattern:
+
+- streaming structured input into an environment
+- registering participants
+- maintaining a shared `ModelContext`
+- triggering inference when a user message arrives
+- executing a function tool when the model emits a function call
+- logging the transcript for visibility
+
+#### Main files
+
+- `agentic-environment/index.ts` — wires the environment, participants, model, tool runner, and input source together
+- `agentic-environment/input-item-source.ts` — emits a developer message and a user question
+- `agentic-environment/reactive-agent.ts` — reacts to user messages and function calls
+- `agentic-environment/capital-of-france-tool.ts` — example tool returning `Paris`
+- `agentic-environment/participant.ts` — simple participant that logs received items
+- `agentic-environment/transcript-logger.ts` — logs all context items as JSON
+
+#### Run
+
+```bash
+npx tsx agentic-environment/index.ts
+```
+
+### 2. Terminal Agent (`terminal-agent/`)
+
+A more practical example that shows how to build an agent with a real tool.
+
+This example exposes a `run_command` function so the model can:
+
+- inspect files and directories
+- read repository contents
+- execute shell commands
+- return structured command results containing `stdout`, `stderr`, and `exitCode`
+
+The terminal agent demonstrates a multi-step tool-use loop:
+
+1. a user message is added to context
+2. the model runs inference
+3. the model emits one or more function calls
+4. the terminal tool executes those calls
+5. function outputs are added back to context
+6. inference runs again after pending calls finish
+
+#### Main files
+
+- `terminal-agent/index.ts` — entry point for the terminal-agent example
+- `terminal-agent/agent.ts` — defines the terminal tool and agent behavior
+- `terminal-agent/terminal.ts` — runs shell commands with `child_process.spawn`
+- `terminal-agent/command-result.ts` — typed command result structure
+- `terminal-agent/human.ts` — sample human input source
+- `terminal-agent/README.md` — example-specific notes
+
+#### Run
+
+```bash
+npx tsx terminal-agent/index.ts
+```
+
+## Repository Structure
+
+```text
+.
+├── agentic-environment/
+├── terminal-agent/
+├── package.json
+├── purpose.md
+└── README.md
+```
+
+## Build
+
+Compile the TypeScript project:
+
+```bash
+npm run build
+```
+
+## Format
+
+```bash
+npm run format
+```
+
+## Notes
+
+- This repository is primarily an examples and experimentation workspace.
+- The root `package.json` includes general project scripts, but the simplest way to run the examples is directly with `tsx`.
+- The terminal agent can run arbitrary shell commands, so use it carefully in trusted environments.

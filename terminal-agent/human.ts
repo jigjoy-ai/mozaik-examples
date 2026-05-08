@@ -2,6 +2,6 @@ import { DeveloperMessageItem, InputItemSource, SystemMessageItem, UserMessageIt
 
 export class HumanInputSource implements InputItemSource {
 	async *stream(signal?: AbortSignal): AsyncIterable<UserMessageItem | DeveloperMessageItem | SystemMessageItem> {
-		yield UserMessageItem.create(`Check the purpose.md and resolve inconsistencies that are described in the file.`)
+		yield UserMessageItem.create(`Analyze this directory and write a detailed description of the project in a file called purpose.md.`)
 	}
 }
