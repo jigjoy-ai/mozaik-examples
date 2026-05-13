@@ -1,5 +1,5 @@
 import { AgenticEnvironment, BaseHumanParticipant, DefaultFunctionCallRunner, Gpt54, ModelContext, OpenAIInferenceRunner } from "@mozaik-ai/core"
-import { HumanInputSource } from "./human"
+import { HumanInput } from "./human"
 import { TerminalAgent, TerminalAgentInputSource, terminalTools } from "./agent"
 
 const environment = new AgenticEnvironment()
@@ -12,7 +12,7 @@ model.setTools(terminalTools)
 model.setReasoningEffort("high")
 
 const agent = new TerminalAgent(inputSource, inferenceRunner, functionCallRunner, environment, context, model)
-const human = new BaseHumanParticipant(new HumanInputSource())
+const human = new BaseHumanParticipant(new HumanInput())
 human.join(environment)
 agent.join(environment)
 

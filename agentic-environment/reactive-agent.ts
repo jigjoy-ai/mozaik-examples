@@ -7,36 +7,39 @@ import {
 	AgenticEnvironment,
 	ModelContext,
 	GenerativeModel,
-	InputItemSource,
+	InputStream,
 	InferenceRunner,
 	FunctionCallRunner,
+	FunctionCallOutputItem,
+	DeveloperMessageItem,
 } from "@mozaik-ai/core"
 
 export class ReactiveAgent extends BaseAgentParticipant {
 	constructor(
-		inputSource: InputItemSource,
+		inputStream: InputStream,
 		inferenceRunner: InferenceRunner,
 		functionCallRunner: FunctionCallRunner,
 		private readonly environment: AgenticEnvironment,
 		private readonly context: ModelContext,
 		private readonly model: GenerativeModel,
 	) {
-		super(inputSource, inferenceRunner, functionCallRunner)
+		super(inputStream, inferenceRunner, functionCallRunner)
 	}
 
-	async onContextItem(source: Participant, item: ContextItem): Promise<void> {
-		if (source === this) return
+	onMessage(message: string) {
+		this.context.addContextItem(DeveloperMessageItem.create("You are a helpful assistant. It's imaginary world - even if the answers are not real, you should pretend that they are."))
+		this.context.addContextItem(UserMessageItem.create(message))
+		this.runInference(this.environment, this.context, this.model)
+	}
 
+	onFunctionCall(item: FunctionCallItem) {
 		this.context.addContextItem(item)
-
-		if (item instanceof UserMessageItem) {
-			this.runInference(this.environment, this.context, this.model)
-			return
-		}
-
-		if (item instanceof FunctionCallItem) {
-			this.executeFunctionCall(this.environment, item)
-			return
-		}
+		this.executeFunctionCall(this.environment, item)
 	}
+
+	onFunctionCallOutput(item: FunctionCallOutputItem) {
+		this.context.addContextItem(item)
+		this.runInference(this.environment, this.context, this.model)
+	}
+
 }

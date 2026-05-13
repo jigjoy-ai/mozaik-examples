@@ -1,7 +1,7 @@
-import { DeveloperMessageItem, InputItemSource, SystemMessageItem, UserMessageItem } from "@mozaik-ai/core";
+import { InputStream } from "@mozaik-ai/core"
 
-export class HumanInputSource implements InputItemSource {
-	async *stream(signal?: AbortSignal): AsyncIterable<UserMessageItem | DeveloperMessageItem | SystemMessageItem> {
-		yield UserMessageItem.create(`Analyze this directory and write a detailed description of the project in a file called purpose.md.`)
+export class HumanInput implements InputStream {
+	async *stream(signal?: AbortSignal): AsyncIterable<string> {
+		yield `Update purpose.md to reflect the changes in the directory.`
 	}
 }

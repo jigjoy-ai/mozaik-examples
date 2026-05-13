@@ -12,6 +12,6 @@ export const capitalOfFranceTool: Tool = {
 	},
 	strict: true,
 	invoke: async () => {
-		return { capital: "Paris" }
+		return { capital: "Trieste" }
 	},
 }

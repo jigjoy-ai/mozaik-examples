@@ -1,5 +1,5 @@
 import "dotenv/config"
-import { AgenticEnvironment, BaseAgentParticipant, ContextItem, DeveloperMessageItem, FunctionCallItem, FunctionCallRunner, InferenceRunner, InputItemSource, ModelContext, Participant, SystemMessageItem, Tool, UserMessageItem, FunctionCallOutputItem, GenerativeModel } from "@mozaik-ai/core"
+import { AgenticEnvironment, BaseAgentParticipant, ContextItem, DeveloperMessageItem, FunctionCallItem, FunctionCallRunner, InferenceRunner, InputStream, ModelContext, Participant, SystemMessageItem, Tool, UserMessageItem, FunctionCallOutputItem, GenerativeModel } from "@mozaik-ai/core"
 import { Terminal } from "./terminal"
 
 const terminal = new Terminal()
@@ -38,46 +38,39 @@ Tools:
 export class TerminalAgent extends BaseAgentParticipant {
 	private pendingCalls = new Set<string>()
 
-	constructor(inputSource: InputItemSource, inferenceRunner: InferenceRunner, functionCallRunner: FunctionCallRunner, private readonly environment: AgenticEnvironment, private readonly context: ModelContext, private readonly model: GenerativeModel) {
-		super(inputSource, inferenceRunner, functionCallRunner)
+	constructor(inputStream: InputStream, inferenceRunner: InferenceRunner, functionCallRunner: FunctionCallRunner, private readonly environment: AgenticEnvironment, private readonly context: ModelContext, private readonly model: GenerativeModel) {
+		super(inputStream, inferenceRunner, functionCallRunner)
 	}
 
-	async onContextItem(source: Participant, item: ContextItem): Promise<void> {
-		if (source === this) {
-			this.context.addContextItem(item)
-		}
+	async onMessage(message: string): Promise<void> {
+		console.log("Message received: ", message)
+		this.context.addContextItem(developerMessage).addContextItem(UserMessageItem.create(message))
+		this.runInference(this.environment, this.context, this.model)
+	}
 
-		console.log("ContextItem", item)
+	onFunctionCall(item: FunctionCallItem): Promise<void> {
+		this.pendingCalls.add(item.callId)
+		this.context.addContextItem(item)
+		this.executeFunctionCall(this.environment, item)
+		return Promise.resolve()
+	}
 
-		if (item instanceof UserMessageItem) {
-			this.context.addContextItem(developerMessage)
-			this.context.addContextItem(item)
+	onFunctionCallOutput(item: FunctionCallOutputItem): Promise<void> {
+		this.context.addContextItem(item)
+		this.pendingCalls.delete(item.callId)
+		if (this.pendingCalls.size === 0) {
 			this.runInference(this.environment, this.context, this.model)
-			return
 		}
-
-		if (item instanceof FunctionCallItem) {
-			this.pendingCalls.add(item.callId)
-			this.executeFunctionCall(this.environment, item)
-			return
-		}
-
-		if (item instanceof FunctionCallOutputItem) {
-			this.pendingCalls.delete(item.callId)
-			if (this.pendingCalls.size === 0) {
-				this.runInference(this.environment, this.context, this.model)
-			}
-			return
-		}
+		return Promise.resolve()
 	}
 }
 
-export class TerminalAgentInputSource implements InputItemSource {
+export class TerminalAgentInputSource implements InputStream {
 
 	constructor(private readonly message: string) {
 	}
 
-	async *stream(signal?: AbortSignal): AsyncIterable<UserMessageItem | DeveloperMessageItem | SystemMessageItem> {
-		yield UserMessageItem.create(this.message)
+	async *stream(signal?: AbortSignal): AsyncIterable<string> {
+		yield this.message
 	}
 }
