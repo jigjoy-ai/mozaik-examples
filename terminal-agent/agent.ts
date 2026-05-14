@@ -1,5 +1,18 @@
 import "dotenv/config"
-import { AgenticEnvironment, BaseAgentParticipant, ContextItem, DeveloperMessageItem, FunctionCallItem, FunctionCallRunner, InferenceRunner, InputStream, ModelContext, Participant, SystemMessageItem, Tool, UserMessageItem, FunctionCallOutputItem, GenerativeModel } from "@mozaik-ai/core"
+import {
+	AgenticEnvironment,
+	BaseAgentParticipant,
+	DeveloperMessageItem,
+	FunctionCallItem,
+	FunctionCallRunner,
+	InferenceRunner,
+	InputStream,
+	ModelContext,
+	Tool,
+	UserMessageItem,
+	FunctionCallOutputItem,
+	GenerativeModel,
+} from "@mozaik-ai/core"
 import { Terminal } from "./terminal"
 
 const terminal = new Terminal()
@@ -17,7 +30,7 @@ export const terminalTools: Tool[] = [
 		},
 		strict: true,
 		type: "function",
-		invoke: async (args: { command: string, cwd: string }) => {
+		invoke: async (args: { command: string; cwd: string }) => {
 			console.log(`Running command: ${args.command} in directory: ${args.cwd}`)
 			console.log("--------------------------------")
 			const result = await terminal.runCommand(args.command, args.cwd)
@@ -38,7 +51,14 @@ Tools:
 export class TerminalAgent extends BaseAgentParticipant {
 	private pendingCalls = new Set<string>()
 
-	constructor(inputStream: InputStream, inferenceRunner: InferenceRunner, functionCallRunner: FunctionCallRunner, private readonly environment: AgenticEnvironment, private readonly context: ModelContext, private readonly model: GenerativeModel) {
+	constructor(
+		inputStream: InputStream,
+		inferenceRunner: InferenceRunner,
+		functionCallRunner: FunctionCallRunner,
+		private readonly environment: AgenticEnvironment,
+		private readonly context: ModelContext,
+		private readonly model: GenerativeModel,
+	) {
 		super(inputStream, inferenceRunner, functionCallRunner)
 	}
 
@@ -66,9 +86,7 @@ export class TerminalAgent extends BaseAgentParticipant {
 }
 
 export class TerminalAgentInputSource implements InputStream {
-
-	constructor(private readonly message: string) {
-	}
+	constructor(private readonly message: string) {}
 
 	async *stream(signal?: AbortSignal): AsyncIterable<string> {
 		yield this.message

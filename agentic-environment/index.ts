@@ -1,4 +1,12 @@
-import { AgenticEnvironment, Gpt54, ModelContext, OpenAIInferenceRunner, DefaultFunctionCallRunner, InputStream, BaseHumanParticipant } from "@mozaik-ai/core"
+import {
+	AgenticEnvironment,
+	Gpt54,
+	ModelContext,
+	OpenAIInferenceRunner,
+	DefaultFunctionCallRunner,
+	InputStream,
+	BaseHumanParticipant,
+} from "@mozaik-ai/core"
 import { capitalOfFranceTool } from "./capital-of-france-tool"
 import { ReactiveAgent } from "./reactive-agent"
 import { TranscriptLogger } from "./transcript-logger"
@@ -9,7 +17,6 @@ class InputSource implements InputStream {
 		yield "What is the capital of France?"
 	}
 }
-
 
 const functionCallRunner = new DefaultFunctionCallRunner([capitalOfFranceTool])
 const inputSource = new InputSource()

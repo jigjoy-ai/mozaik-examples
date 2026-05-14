@@ -1,7 +1,6 @@
 import { Participant, FunctionCallItem, FunctionCallOutputItem, ModelMessageItem, ReasoningItem } from "@mozaik-ai/core"
 
 export class TranscriptLogger extends Participant {
-
 	onMessage(message: string) {
 		console.log(`[${message}]`)
 	}
@@ -13,7 +12,7 @@ export class TranscriptLogger extends Participant {
 	onFunctionCallOutput(item: FunctionCallOutputItem) {
 		console.log(`[${item.constructor.name}]`, item.toJSON())
 	}
-	
+
 	onReasoning(item: ReasoningItem) {
 		console.log(`[${item.constructor.name}]`, item.toJSON())
 	}
@@ -37,6 +36,4 @@ export class TranscriptLogger extends Participant {
 	onExternalModelMessage(source: Participant, item: ModelMessageItem) {
 		console.log(`[${source.constructor.name}]`, item.toJSON())
 	}
-
-
 }
