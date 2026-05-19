@@ -5,7 +5,6 @@ import {
 	OpenAIInferenceRunner,
 	DefaultFunctionCallRunner,
 	InputStream,
-	BaseHumanParticipant,
 } from "@mozaik-ai/core"
 import { capitalOfFranceTool } from "./capital-of-france-tool"
 import { ReactiveAgent } from "./reactive-agent"
