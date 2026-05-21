@@ -1,6 +1,13 @@
-import { Participant, FunctionCallItem, FunctionCallOutputItem, ModelMessageItem, ReasoningItem } from "@mozaik-ai/core"
+import {
+	BaseObserver,
+	FunctionCallItem,
+	FunctionCallOutputItem,
+	ModelMessageItem,
+	Participant,
+	ReasoningItem,
+} from "@mozaik-ai/core"
 
-export class TranscriptLogger extends Participant {
+export class TranscriptLogger extends BaseObserver {
 	onMessage(message: string) {
 		console.log(`[${message}]`)
 	}

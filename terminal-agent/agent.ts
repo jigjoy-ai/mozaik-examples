@@ -1,17 +1,16 @@
 import "dotenv/config"
 import {
 	AgenticEnvironment,
-	BaseAgentParticipant,
 	DeveloperMessageItem,
 	FunctionCallItem,
 	FunctionCallRunner,
 	InferenceRunner,
-	InputStream,
 	ModelContext,
 	Tool,
 	UserMessageItem,
 	FunctionCallOutputItem,
 	GenerativeModel,
+	BaseAgent,
 } from "@mozaik-ai/core"
 import { Terminal } from "./terminal"
 
@@ -48,18 +47,17 @@ Tools:
 - run_command: Run a command in the terminal. You can use this tool to run any command in the terminal.
 `)
 
-export class TerminalAgent extends BaseAgentParticipant {
+export class TerminalAgent extends BaseAgent {
 	private pendingCalls = new Set<string>()
 
 	constructor(
-		inputStream: InputStream,
 		inferenceRunner: InferenceRunner,
 		functionCallRunner: FunctionCallRunner,
 		private readonly environment: AgenticEnvironment,
 		private readonly context: ModelContext,
 		private readonly model: GenerativeModel,
 	) {
-		super(inputStream, inferenceRunner, functionCallRunner)
+		super(inferenceRunner, functionCallRunner)
 	}
 
 	async onMessage(message: string): Promise<void> {
@@ -82,13 +80,5 @@ export class TerminalAgent extends BaseAgentParticipant {
 			this.runInference(this.environment, this.context, this.model)
 		}
 		return Promise.resolve()
-	}
-}
-
-export class TerminalAgentInputSource implements InputStream {
-	constructor(private readonly message: string) {}
-
-	async *stream(signal?: AbortSignal): AsyncIterable<string> {
-		yield this.message
 	}
 }

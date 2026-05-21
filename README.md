@@ -2,10 +2,11 @@
 
 This repository contains small, runnable TypeScript examples built with [`@mozaik-ai/core`](https://www.npmjs.com/package/@mozaik-ai/core).
 
-The code currently focuses on two example projects:
+The code currently focuses on three example projects:
 
 - `agentic-environment/` — a minimal reactive environment with participants, shared context, inference, and a simple tool call
 - `terminal-agent/` — a terminal-capable agent that can run shell commands and use the results to complete tasks
+- `inference-interception/` — two streaming agents plus an observer; a safety reviewer intercepts the planner’s stream in real time
 
 ## Prerequisites
 
@@ -89,11 +90,30 @@ The terminal agent demonstrates a multi-step tool-use loop:
 npx tsx terminal-agent/index.ts
 ```
 
+### 3. Inference Interception (`inference-interception/`)
+
+Shows **streaming semantic events** and **parallel inference** in one environment:
+
+- a planner runs non-blocking streaming inference
+- a safety reviewer watches `onExternalEvent` for risky phrases and starts its own run
+- an observer logs events and completed model messages
+
+Requires `@mozaik-ai/core` 3.10+.
+
+#### Run
+
+```bash
+npm run inference-interception
+```
+
+See [`inference-interception/README.md`](inference-interception/README.md) for file layout and behavior.
+
 ## Repository Structure
 
 ```text
 .
 ├── agentic-environment/
+├── inference-interception/
 ├── terminal-agent/
 ├── package.json
 ├── purpose.md
