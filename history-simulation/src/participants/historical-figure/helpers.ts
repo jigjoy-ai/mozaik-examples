@@ -21,11 +21,19 @@ export function startAgentTurn(agent: Agent, message: string): void {
 
 export function closeConversation(): void {
 	const { conversation } = resolveRuntime().state
+
+	if (!conversation.tryClose()) {
+		return
+	}
+
 	console.log(`\nConversation closed after ${conversation.getMaxTurns()} turns.`)
 
-	for (const participant of resolveRuntime().state.getParticipants()) {
-		if (participant.getManifest().role === "agent") {
-			leave(participant)
+	// Leave after the current model.answer publish finishes walking participants.
+	setImmediate(() => {
+		for (const participant of resolveRuntime().state.getParticipants()) {
+			if (participant.getManifest().role === "agent") {
+				leave(participant)
+			}
 		}
-	}
+	})
 }

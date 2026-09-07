@@ -25,9 +25,7 @@ export class RecordOwnAnswerProcessor implements SituationProcessor {
 		agent.getMemory().getContext().addContextItem(answer)
 		console.log(`\n${agent.getManifest().name} [${turn}/${conversation.getMaxTurns()}]: ${answer.content.text}`)
 
-		if (conversation.isComplete()) {
-			closeConversation()
-		}
+		closeConversation()
 	}
 }
 

@@ -5,6 +5,7 @@ export class Conversation {
 		private turns: number,
 		private inFlight: number,
 		private readonly maxTurns: number,
+		private closed: boolean,
 	) {}
 
 	getTurns(): number {
@@ -16,7 +17,7 @@ export class Conversation {
 	}
 
 	canStartTurn(): boolean {
-		return this.turns + this.inFlight < this.maxTurns
+		return !this.closed && this.turns + this.inFlight < this.maxTurns
 	}
 
 	startTurn(): boolean {
@@ -33,7 +34,10 @@ export class Conversation {
 			this.inFlight--
 		}
 
-		this.turns++
+		if (this.turns < this.maxTurns) {
+			this.turns++
+		}
+
 		return this.turns
 	}
 
@@ -41,8 +45,21 @@ export class Conversation {
 		return this.turns >= this.maxTurns
 	}
 
+	isSettled(): boolean {
+		return this.isComplete() && this.inFlight === 0
+	}
+
+	tryClose(): boolean {
+		if (this.closed || !this.isSettled()) {
+			return false
+		}
+
+		this.closed = true
+		return true
+	}
+
 	static init(maxTurns: number): Conversation {
-		return new Conversation(0, 0, maxTurns)
+		return new Conversation(0, 0, maxTurns, false)
 	}
 }
 
