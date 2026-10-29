@@ -2,246 +2,345 @@
 
 ## Overview
 
-This repository is a small TypeScript example of a **terminal-capable AI agent** built on top of `@mozaik-ai/core`. Its purpose is to demonstrate how to give an agent access to a real shell-command tool, let it inspect and manipulate a local working directory, and drive the interaction through Mozaik's event-based runtime.
+This repository is a compact TypeScript example of a **terminal-capable AI agent** built with `@mozaik-ai/core`. Its purpose is to show how an LLM-driven agent can be connected to a local runtime, given access to a real shell command tool, and allowed to inspect or modify the working directory in response to a natural-language request.
 
-At a high level, the project shows how to build an agent that can:
+The project is not a general-purpose application or a production-hardened agent platform. It is best understood as a **reference implementation** or **example project** that demonstrates the core building blocks of a tool-using agent:
 
-- receive a natural-language instruction,
-- decide to call a tool,
-- run a shell command in a chosen directory,
-- capture `stdout`, `stderr`, and the exit code,
-- feed the tool result back into the agent loop, and
-- produce a final response based on what it learned from the terminal.
+- an event-driven runtime,
+- a human participant,
+- an agent participant,
+- a terminal tool,
+- a model/tool execution loop,
+- and console-visible tracing of tool calls and final answers.
 
-This is not a full end-user application with a UI or a production sandbox. It is a compact reference implementation intended to show the core mechanics of **tool-using, terminal-enabled agents**.
+In other words, this codebase exists to illustrate how to build an agent that can do more than chat: it can **take action in a terminal**, observe the results, and continue reasoning from those results.
 
-## What the Project Is For
+## Primary Goal
 
-The main purpose of the project is to provide a clear example of **action-oriented agent design** rather than chat-only AI behavior.
+The main goal of the project is to demonstrate a simple but realistic pattern for **agentic automation**:
 
-Instead of limiting the model to text generation, the code gives the agent one concrete capability: `run_command`. That tool lets the model interact with the operating system through the terminal, which makes the agent useful for tasks such as:
+1. a user sends an instruction,
+2. the runtime delivers the event,
+3. the agent invokes a model with access to tools,
+4. the model decides when to call a tool,
+5. the tool runs a shell command,
+6. the output is captured in structured form,
+7. the runtime feeds the result back into the loop,
+8. the model eventually produces a final answer.
 
-- inspecting a repository,
-- reading files,
-- listing directories,
-- running local scripts,
+That pattern is the heart of many practical AI agents. This repository strips it down to a small, understandable implementation.
+
+## What the Agent Is Meant to Do
+
+The agent is explicitly configured to behave like a terminal operator. Its instruction says:
+
+- it can run commands in the terminal,
+- it should use terminal commands to help with the user's request,
+- it should not ask the user questions,
+- it should just run commands and return results.
+
+This makes the project useful for demonstrating tasks such as:
+
+- inspecting a codebase,
+- listing files and directories,
+- reading source files,
 - gathering information before answering,
-- and making file changes as part of a task.
+- writing or updating files,
+- supporting local development automation.
 
-The sample flow in `src/main.ts` is intentionally simple and self-demonstrating: the runtime sends the agent a request to analyze the current directory and write a description of the project into `purpose.md`. That means the repository is both the example system and the target of the agent's work.
+The sample invocation in `src/main.ts` proves that intent directly: when the program starts, it sends the agent the message:
 
-## Core Idea
+> Analyze this directory and write a detailed description of the project in a file called purpose.md.
 
-The project demonstrates a minimal version of an **LLM + tools + runtime loop**:
+So the repository is both:
 
-1. A user message enters the runtime.
-2. The agent receives the event.
-3. The agent invokes a model with tool definitions attached.
-4. The model may choose to call `run_command`.
-5. The tool executes a real shell command.
-6. The result is returned in structured form.
-7. The runtime continues the loop until the model has enough information to answer.
+- the **subject of analysis**, and
+- the **execution environment** the agent can operate in.
 
-That makes this repository useful as a learning example for anyone building AI agents that need to do real work in a local environment.
+## High-Level Architecture
 
-## Architecture Summary
+The project is organized around a small runtime with two participants:
 
-The codebase is small, but it has a clear separation of responsibilities.
+- a **user participant** that acts like the human/operator side,
+- an **agent participant** that owns the model instruction and tool access.
+
+The agent has one tool: `run_command`.
+
+That tool delegates to a `Terminal` class, which executes shell commands with Node's `child_process.spawn`, captures `stdout`, `stderr`, and exit code, and returns a normalized result object.
+
+The runtime itself comes from `@mozaik-ai/core` and is wrapped in a small local helper module so the rest of the project can use functions like:
+
+- `initializeRuntime`
+- `join`
+- `sendMessage`
+- `runLoop`
+
+This gives the codebase a clean separation between:
+
+- runtime setup,
+- participant definitions,
+- event handling,
+- tool registration,
+- low-level terminal execution.
+
+## Source Layout and Responsibilities
 
 ### `src/main.ts`
-This is the runtime entry point.
 
-It:
+This is the executable entry point for the example.
+
+Responsibilities:
+
 - loads environment variables with `dotenv/config`,
-- initializes the Mozaik runtime with an `EnvironmentState`,
-- joins a human participant and the terminal agent to the runtime,
-- sends an initial user message requesting repository analysis.
+- imports the user and agent participants,
+- initializes the runtime with `EnvironmentState`,
+- joins both participants to the runtime,
+- sends the initial natural-language task into the system.
 
-This file effectively acts as the demo launcher for the whole system.
-
-### `src/agent.ts`
-This file defines the AI agent and its event-driven behavior.
-
-Important responsibilities in this file:
-- defining a `SituationSpecification` that reacts to `message.sent` events,
-- defining an `InferenceProcessor` that turns a runtime event into a model inference request,
-- constructing an `InferenceInput` with:
-  - a model name,
-  - reasoning effort,
-  - memory context,
-  - available tools,
-- calling `runLoop(...)` to let the agent reason and use tools,
-- creating the agent with a built-in instruction that explicitly tells it to behave like a terminal agent and avoid asking the user questions.
-
-This file is the center of the project's agent behavior. It shows how a participant in the runtime becomes a model-powered actor with tools.
-
-### `src/tools.ts`
-This file exposes terminal access as a Mozaik tool.
-
-It defines a single tool:
-- `run_command`
-
-The tool:
-- has a strict schema,
-- requires `command` and `cwd`,
-- logs what is being run,
-- delegates execution to the `Terminal` class,
-- returns a structured command result.
-
-This is the project's key integration point between the model layer and the local machine.
-
-### `src/terminal.ts`
-This file implements the real terminal execution layer.
-
-The `Terminal` class:
-- accepts a shell command and working directory,
-- spawns a child process using Node's `child_process.spawn`,
-- runs with `shell: true`,
-- captures standard output and standard error incrementally,
-- listens for process-level errors,
-- resolves to a normalized `CommandResult` object when the process ends.
-
-This class is intentionally simple. Its purpose is to turn arbitrary shell execution into a predictable, tool-friendly API.
-
-### `src/command-result.ts`
-This file defines the `CommandResult` interface:
-
-- `success`
-- `stdout`
-- `stderr`
-- `exitCode`
-
-Its role is small but important: it standardizes tool output so the rest of the agent system can rely on a consistent result shape.
+This file acts as the demo launcher. It is intentionally small because most behavior lives in the participants and runtime loop.
 
 ### `src/runtime.ts`
-This file wraps Mozaik runtime creation.
 
-It defines:
-- `EnvironmentState`, extending `RuntimeState`,
-- runtime helpers returned by `defineRuntime`, including:
-  - `initializeRuntime`
-  - `resolveRuntime`
-  - `resolveParticipant`
-  - `join`
-  - `leave`
-  - `sendMessage`
-  - `sendEvent`
-  - `runLoop`
+This module defines and exports the runtime API for the project.
 
-Its purpose is to centralize runtime setup and re-export the runtime operations used by the rest of the project.
+It:
 
-### `src/user.ts`
-This file defines the human-side participant used in the demo.
+- creates `EnvironmentState` as a subclass of `RuntimeState`,
+- calls `defineRuntime<EnvironmentState>()`,
+- re-exports the generated runtime helpers.
 
-Rather than being an interactive CLI, this “user” is another runtime participant that listens to agent-related events and prints them to the console.
+Those helpers include:
 
-It reacts to:
-- `function_call.started`
-- `function_call.completed`
-- `model.answer`
+- `initializeRuntime`
+- `resolveRuntime`
+- `resolveParticipant`
+- `join`
+- `leave`
+- `sendMessage`
+- `sendEvent`
+- `runLoop`
 
-Its processors log:
-- which tool was called,
-- the tool result,
-- the final model answer.
+Its purpose is to centralize runtime creation so the rest of the project can import a shared runtime interface.
 
-This helps make the runtime behavior observable when the example runs.
+### `src/command-result.ts`
 
-## Runtime Model
+This file defines the `CommandResult` TypeScript interface.
 
-A major purpose of the repository is to illustrate that the agent is not just a function call to an LLM. It is part of an **event-driven runtime**.
+It standardizes the shape of a terminal command result:
 
-The flow is roughly:
+- `success: boolean`
+- `stdout: string`
+- `stderr: string`
+- `exitCode: number`
 
-1. The application initializes a shared runtime.
-2. Participants join the runtime.
-3. A user message is emitted.
-4. The agent receives the message because its situation specification matches the event.
-5. The agent assembles inference input and calls the Mozaik loop.
-6. If the model chooses a tool, the runtime executes it.
-7. The tool output is fed back into the loop.
-8. The model eventually produces a final answer.
-9. The user participant prints the intermediate and final events.
+This gives the terminal tool a predictable return type that fits well into a tool-calling workflow.
 
-This design makes the project a useful example of **message-driven orchestration** for AI agents.
+### `src/terminal.ts`
+
+This module contains the low-level shell execution logic.
+
+The `Terminal` class exposes `runCommand(command, cwd, contextMessage?)`, which:
+
+- parses the command string into command and args,
+- spawns a child process,
+- runs with `shell: true`,
+- collects `stdout` incrementally,
+- collects `stderr` incrementally,
+- listens for process errors,
+- resolves with a `CommandResult` when the command completes.
+
+It also appends a success or failure message to the output, making command results more readable when printed.
+
+This class is the bridge between the abstract tool system and the real operating system.
+
+### `src/participants/agent/index.ts`
+
+This file defines the AI agent participant.
+
+It uses `createAgent` from `@mozaik-ai/core` and configures:
+
+- the agent's name,
+- its instruction,
+- its available tools,
+- its event handlers.
+
+The instruction makes the agent terminal-focused and action-oriented. The agent is intentionally narrow and practical rather than conversational.
+
+### `src/participants/agent/tools.ts`
+
+This file registers the agent's tools.
+
+Right now there is exactly one tool:
+
+- `run_command`
+
+The tool declaration includes:
+
+- a description,
+- a JSON-schema-like parameter definition,
+- strict validation,
+- an async `invoke` function.
+
+The `invoke` function logs the command being executed and then calls `Terminal.runCommand(...)`.
+
+This is the key integration point where the model gains operational ability.
+
+### `src/participants/agent/situations/message-sent.ts`
+
+This file defines the agent's reaction to runtime events.
+
+It contains:
+
+- `MessageSentSpecification`, which matches `message.sent` events,
+- `InferenceProcessor`, which turns the event into a model inference request.
+
+The processor:
+
+- extracts the incoming message,
+- reads the agent memory context,
+- selects model `gpt-5.4`,
+- sets `reasoningEffort: "high"`,
+- attaches the tool set,
+- calls `runLoop(...)`.
+
+This file is important because it shows the project is not just “call a model once.” It is an event-triggered agent loop that can use tools iteratively.
+
+### `src/participants/user/index.ts`
+
+This module defines the human-side participant using `createHuman`.
+
+In this example, the user is not an interactive REPL or UI component. Instead, it is a runtime participant whose main job is to render useful events to the console.
+
+That makes the system easy to observe while keeping the implementation simple.
+
+### `src/participants/user/situations/function-call-started.ts`
+
+This handler reacts to `function_call.started` events and prints:
+
+- the tool name,
+- the tool arguments.
+
+Its role is visibility: it shows when the model has decided to act.
+
+### `src/participants/user/situations/function-call-completed.ts`
+
+This handler reacts to `function_call.completed` events and prints:
+
+- the tool result.
+
+This lets the operator see exactly what came back from a command execution.
+
+### `src/participants/user/situations/model-answer.ts`
+
+This handler reacts to `model.answer` events and prints:
+
+- the final answer text.
+
+Together, the three user-side handlers make the runtime behavior transparent in the console.
+
+## Execution Flow
+
+When the project runs, the behavior is roughly:
+
+1. `src/main.ts` starts the runtime.
+2. The user participant and agent participant join.
+3. A user message is sent into the runtime.
+4. The agent's `message.sent` situation matches that event.
+5. The agent builds an inference request and calls `runLoop(...)`.
+6. The model may choose to call `run_command`.
+7. The tool runs a real shell command in the specified working directory.
+8. The command output is returned as structured data.
+9. The runtime continues until the model produces a final answer.
+10. The user participant logs tool calls, tool outputs, and the final answer.
+
+This end-to-end path is the main concept the repository exists to demonstrate.
 
 ## Technology Stack
 
 The project uses:
 
-- **TypeScript** for implementation,
-- **Node.js** as the runtime environment,
-- **ES modules** (`"type": "module"`),
-- **`@mozaik-ai/core`** for agent, runtime, memory, tool, and loop primitives,
-- **`dotenv`** for environment configuration,
-- **`tsx`** to run TypeScript directly during development.
+- **TypeScript**
+- **Node.js**
+- **ES modules** (`"type": "module"`)
+- **`@mozaik-ai/core`** for runtime, participants, tools, events, and agent loops
+- **`dotenv`** for environment loading
+- **`tsx`** for running TypeScript directly in development
 
-The TypeScript configuration is modern and strict:
-- target: `ES2022`
-- module: `ESNext`
-- strict type checking
-- no emit in the current TS config
+The TypeScript configuration is strict and modern:
 
-## Development and Execution Style
+- `target: ES2022`
+- `module: ESNext`
+- `moduleResolution: bundler`
+- `strict: true`
+- `noEmit: true`
 
-The project is meant to be run locally with:
+This indicates the repository is geared toward local development and clarity rather than a compiled build pipeline.
 
-- `npm install`
-- `npm start`
+## Package and Run Model
 
-The `start` script runs `tsx src/main.ts`.
+`package.json` shows this is a small private project with a single main script:
 
-That means this repository is primarily a **development/demo project** rather than a compiled distributable service. It is optimized for clarity and fast iteration.
+- `npm start` → `tsx src/main.ts`
 
-## Design Characteristics
+That reinforces the idea that this repository is an executable example rather than a packaged library with multiple entrypoints.
 
-This repository is notable for being:
+## Design Qualities
 
 ### Minimal
-It contains only a handful of source files, each with a focused job. That keeps the architecture easy to follow.
+The codebase is small and focused. There is very little abstraction beyond what is needed to show the runtime and tool loop.
 
-### Practical
-The agent does not call fake tools or mocks. It runs real terminal commands and returns real command output.
+### Demonstrative
+Nearly every file exists to illustrate one part of the pattern: event handling, tool registration, shell execution, or console rendering.
 
 ### Extensible
-Although it currently exposes only one tool, the pattern is easy to extend with additional tools for file editing, HTTP requests, search, or other automation tasks.
+Although only one tool is present, the architecture supports adding more tools with the same pattern. Examples might include:
 
-### Explicitly agentic
-The project is designed around a loop where the model can act, observe results, and continue reasoning. That is the core pattern behind more capable autonomous or semi-autonomous agents.
+- file editing tools,
+- HTTP request tools,
+- search tools,
+- git helpers,
+- test runners.
 
-## Safety and Risk Considerations
+### Agentic rather than chat-only
+The project is designed around an LLM that can observe, act, and continue. That is a more capable pattern than a single prompt-response exchange.
 
-The project is intentionally powerful, so its purpose must be understood alongside its risks.
+## Safety and Operational Considerations
 
-### Arbitrary shell execution
-The `run_command` tool allows execution of arbitrary commands in a specified working directory. This is useful for automation but dangerous in untrusted environments.
+This project is intentionally powerful and should be understood accordingly.
 
-### Shell mode enabled
-Because `spawn` is used with `shell: true`, the implementation favors flexibility and convenience over strict command isolation.
+### Arbitrary command execution
+The `run_command` tool can execute arbitrary shell commands in any provided working directory.
 
-### No built-in sandboxing
-There is no evidence in this codebase of:
-- command allowlisting,
-- filesystem permission controls,
-- network restrictions,
-- path confinement,
-- approval workflows.
+### Shell enabled
+Because execution uses `spawn(..., { shell: true })`, the implementation prioritizes convenience and broad shell compatibility.
 
-So the project should be understood as a prototype or example, not a hardened secure agent runner.
+### No visible sandboxing
+There is no built-in evidence here of:
 
-## Documentation Notes
+- command allowlists,
+- path restrictions,
+- approval gates,
+- resource limits,
+- security sandboxing.
 
-One useful observation from analyzing the repository is that the `README.md` appears slightly out of sync with the current source layout. For example, it references `src/index.ts`, while the actual entry point in this directory is `src/main.ts`. The source files themselves are the more accurate guide to the current implementation.
+That means the repository should be treated as a **prototype/example** suitable for controlled environments, not as a secure production agent runner.
+
+## Observations About Documentation
+
+The existing `README.md` describes the project correctly at a high level, but some file references appear outdated. For example, it mentions `src/index.ts`, while the actual entry point in this repository is `src/main.ts`, and the agent/user logic is organized under `src/participants/...`.
+
+So the source code is the most accurate description of the current project structure.
 
 ## Overall Purpose Summary
 
-In summary, this project exists to demonstrate how to build a **terminal-enabled AI agent** with Mozaik's core abstractions.
+In summary, this repository exists to demonstrate how to build a **terminal-enabled AI agent** using Mozaik's runtime and tool abstractions.
 
-Its real purpose is to serve as a compact reference for:
+Its purpose is to serve as a practical example of:
+
 - event-driven agent orchestration,
-- tool registration,
-- shell-command execution,
-- structured tool outputs,
-- and iterative model/tool/model workflows.
+- model-triggered tool use,
+- structured command execution,
+- terminal-based local automation,
+- and iterative reasoning over tool results.
 
-If you want to understand how an LLM can be wired into a local runtime and given real operational abilities through a terminal tool, this repository is a concise and practical example of that pattern.
+If someone wants to learn how an LLM can be given real operational capability inside a local Node.js program, this project is a concise and effective example of that pattern.

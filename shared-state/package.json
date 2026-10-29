@@ -9,7 +9,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@mozaik-ai/core": "4.1.0",
+		"@mozaik-ai/core": "4.2.0",
 		"dotenv": "^17.4.2"
 	},
 	"devDependencies": {
